@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>진주 관광지</title>
+	<style>
+	html, body {width:100%;height:900%;margin:0;padding:0;} 
+	.map_wrap {position:relative;overflow:hidden;width:100%;height:900px;}
+	.radius_border{border:1px solid #919191;border-radius:5px;}     
+	.custom_typecontrol {position:absolute;top:10px;right:10px;overflow:hidden;width:130px;height:30px;margin:0;padding:0;z-index:1;font-size:12px;font-family:'Malgun Gothic', '맑은 고딕', sans-serif;}
+	.custom_typecontrol span {display:block;width:65px;height:30px;float:left;text-align:center;line-height:30px;cursor:pointer;}
+	.custom_typecontrol .btn {background:#fff;background:linear-gradient(#fff,  #e6e6e6);}       
+	.custom_typecontrol .btn:hover {background:#f5f5f5;background:linear-gradient(#f5f5f5,#e3e3e3);}
+	.custom_typecontrol .btn:active {background:#e6e6e6;background:linear-gradient(#e6e6e6, #fff);}    
+	.custom_typecontrol .selected_btn {color:#fff;background:#425470;background:linear-gradient(#425470, #5b6d8a);}
+	.custom_typecontrol .selected_btn:hover {color:#fff;}   
+	.custom_zoomcontrol {position:absolute;top:50px;right:10px;width:36px;height:80px;overflow:hidden;z-index:1;background-color:#f5f5f5;} 
+	.custom_zoomcontrol span {display:block;width:36px;height:40px;text-align:center;cursor:pointer;}     
+	.custom_zoomcontrol span img {width:15px;height:15px;padding:12px 0;border:none;}             
+	.custom_zoomcontrol span:first-child{border-bottom:1px solid #bfbfbf;}  
+    .wrap {position: absolute;left: 0;bottom: 40px;width: 288px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
+    .wrap * {padding: 0;margin: 0;}
+    .wrap .info {width: 286px;height: 120px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
+    .wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
+    .info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
+    .info .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
+    .info .close:hover {cursor: pointer;}
+    .info .body {position: relative;overflow: hidden;}
+    .info .desc {position: relative;margin: 13px 0 0 90px;height: 75px;}
+    .desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+    .desc .jibun {font-size: 11px;color: #888;margin-top: -2px;}
+    .info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
+    .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+    .info .link {color: #5085BB;}
+</style> 
+
+    
+</head>
+<body>
+<div class="map_wrap">
+    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div> 
+    <!-- 지도타입 컨트롤 div 입니다 -->
+    <div class="custom_typecontrol radius_border">
+        <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
+        <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">스카이뷰</span>
+    </div>
+    <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+    <div class="custom_zoomcontrol radius_border"> 
+        <span onclick="zoomIn()"><img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"></span>  
+        <span onclick="zoomOut()"><img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소"></span>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=649cb0663217541815c3ad7ca191d4e1"></script>
+<script>
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
+    mapOption = { 
+        center: new daum.maps.LatLng(35.15978158939486, 128.29473299166298), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };
+
+var map = new daum.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+
+ 
+// 마커를 표시할 위치와 내용을 가지고 있는 객체 배열입니다 
+var positions = [
+    {
+        content: 
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            수목원' +  
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '            <img src="http://cfile7.uf.tistory.com/image/115A3A154C31176C950D82" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 이반성면 수목원 386</div>' + 
+            '                <div class="jibun ellipsis">(문의) 055-254-2811</div>' +			
+            '                <div><a href="http://0572.tistory.com/731" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/수목원,35.15978158939486,128.29473299166298" target="_blank" class="link">       길찾기</a></div>' +			
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.15978158939486, 128.29473299166298)
+    },
+ 
+
+
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            진양호공원' + 
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="http://cfile28.uf.tistory.com/image/2426BD4A51FEEE2823AAE3" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 판문로 84</div>' + 
+            '                <div class="jibun ellipsis">(문의) 055-749-2510</div>' + 
+            '                <div><a href="http://pt27288.tistory.com/1318" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/진양호공원,35.175159228369566, 128.03707235717903" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.175159228369566, 128.03707235717903)
+    },
+	
+	
+	
+	
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            진주랜드' + 
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="data:image/jpeg;base64,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" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 남강로 1번길</div>' + 
+            '                <div class="jibun ellipsis">(문의) 055-749-4431</div>' + 
+            '                <div><a href="http://tour.jinju.go.kr/01tour/SIGHT002.jsp?amode=_viw&cult_sno=437" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/진주랜드,35.1747756794849, 128.03554990093474" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.1747756794849, 128.03554990093474)
+    },
+	
+	
+
+	
+	
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            진주 어린이교통공원' + 
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="http://www.autodiary.kr/wp-content/uploads/3018668/266/933/002/2.jpg?w=1400" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 평거동 695-168</div>' + 
+            '                <div class="jibun ellipsis">(문의) 055-749-2561</div>' + 
+            '                <div><a href="http://m.blog.naver.com/pih1461/220311300209" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/진주어린이교통공원,35.16228240406786, 128.03778964056025" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.16228240406786, 128.03778964056025)
+    },
+	
+	
+
+	
+	
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            초전공원' + 
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="http://cfile4.uf.tistory.com/image/230F4B38553E29E6287839" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 초전동</div>' + 
+            '                <div><a href="http://begin-ing.tistory.com/entry/%EB%82%98%EB%93%A4%EC%9D%B4-%EA%B0%80%EA%B8%B0-%EC%A2%8B%EC%9D%80-%EA%B3%B3-%EB%A9%94%ED%83%80%EC%84%B8%EC%BF%BC%EC%9D%B4%EC%95%84%EA%B8%B8%EC%9D%B4-%EC%9E%88%EB%8A%94-%EC%A7%84%EC%A3%BC-%EC%B4%88%EC%A0%84%EA%B3%B5%EC%9B%90" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/초전공원,35.203446380986676, 128.12614390068188" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.203446380986676, 128.12614390068188)
+    },
+	
+	
+	
+	
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            숲속치즈스콜' + 
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="http://mblogthumb1.phinf.naver.net/20160111_44/bbors412_1452515949387mSfOR_JPEG/NaverBlog_20160111_213911_00.jpg?type=w420" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 명석면 판문로 575번길 15</div>' + 
+            '                <div class="jibun ellipsis">(문의) 055-744-7273</div>' + 
+            '                <div><a href="http://jinjucheese.com/page.php?id=sub2_1" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/숲속치즈스쿨,35.21606162645239, 128.0300692509942" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.21606162645239, 128.0300692509942)
+    },
+	
+
+	
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            신안녹지공원' + 
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="http://www.ilyoseoul.co.kr/news/photo/201703/175879_119056_5743.jpg" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 신안동</div>' + 
+            '                <div><a href="http://map.daum.net/link/to/신안녹지공원,35.173744125762084, 128.06665647141244" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.173744125762084, 128.06665647141244)
+    },
+	
+	
+	
+	
+	
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            도레미공원' + 
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="http://www.knnews.kr/edb/nimages/2014/04/20140417.01010107000001.01L.jpg" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 하대동</div>' + 
+            '                <div><a href="http://map.daum.net/link/to/도레미공원,35.192370436546184, 128.12482721028334" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.192370436546184, 128.12482721028334)
+    },
+	
+
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            석류공원' +  
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="http://cfile228.uf.daum.net/image/126122224A331637044137" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 가좌동</div>' + 
+            '                <div><a href="http://blog.daum.net/tkfkdaq/8" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/석류공원,35.166332173328854, 128.10497261498438" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.166332173328854, 128.10497261498438)
+    },
+	
+
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            강주연못공원' + 
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="http://cfile1.uf.tistory.com/image/227E475055A4775034997B" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 정촌면 예하리 </div>' + 
+            '                <div><a href="http://leemsw.tistory.com/89" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/강주연못공원,35.114423070761596, 128.09461588371863" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.114423070761596, 128.09461588371863)
+    },
+	
+	
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            해맞이공원' + 
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="https://s-media-cache-ak0.pinimg.com/736x/23/5c/25/235c25523a08feb2bdf0248f824d3f66.jpg" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 내동면 유수리 </div>' + 
+            '                <div><a href="http://toyvillage.tistory.com/610" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/해맞이공원,35.1327959183886, 128.0485321608542" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.1327959183886, 128.0485321608542)
+    },
+	
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            용호정원' +  
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="http://cfile21.uf.tistory.com/image/223C0736532ABAE6189CF8" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 명석면 용산리 </div>' + 
+            '                <div><a href="https://ko.wikipedia.org/wiki/%EC%9A%A9%ED%98%B8%EC%A0%95%EC%9B%90" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/용호정원,35.222067105334304, 128.03185581386185" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.222067105334304, 128.03185581386185)
+    },
+	
+
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            가좌동 공원' +  
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="http://cfile204.uf.daum.net/image/273141475353F028039F03" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 가좌동</div>' + 
+            '                <div><a href="http://map.daum.net/link/to/가좌동공원,35.15186211386825, 128.10641479243517" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.15186211386825, 128.10641479243517)
+    }
+
+];
+
+for (var i = 0; i < positions.length; i ++) {
+    // 마커를 생성합니다
+    var marker = new daum.maps.Marker({
+        map: map, // 마커를 표시할 지도
+        position: positions[i].latlng // 마커의 위치
+    });
+
+    // 마커에 표시할 인포윈도우를 생성합니다 
+    var infowindow = new daum.maps.InfoWindow({
+        content: positions[i].content // 인포윈도우에 표시할 내용
+    });
+
+    // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+    // 이벤트 리스너로는 클로저를 만들어 등록합니다 
+    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+    daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+    daum.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+	daum.maps.event.addListener(marker, 'click', function() {
+    overlay.setMap(map);
+});
+}
+
+
+// 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+function makeOverListener(map, marker, infowindow) {
+    return function() {
+        infowindow.open(map, marker);
+    };
+}
+
+// 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+function makeOutListener(infowindow) {
+    return function() {
+        infowindow.close();
+    };
+}
+
+function setMapType(maptype) { 
+    var roadmapControl = document.getElementById('btnRoadmap');
+    var skyviewControl = document.getElementById('btnSkyview'); 
+    if (maptype === 'roadmap') {
+        map.setMapTypeId(daum.maps.MapTypeId.ROADMAP);    
+        roadmapControl.className = 'selected_btn';
+        skyviewControl.className = 'btn';
+    } else {
+        map.setMapTypeId(daum.maps.MapTypeId.HYBRID);    
+        skyviewControl.className = 'selected_btn';
+        roadmapControl.className = 'btn';
+    }
+}
+
+// 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+function zoomIn() {
+    map.setLevel(map.getLevel() - 1);
+}
+
+// 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+function zoomOut() {
+    map.setLevel(map.getLevel() + 1);
+}
+
+map.addOverlayMapTypeId(daum.maps.MapTypeId.TRAFFIC);
+map.addOverlayMapTypeId(daum.maps.MapTypeId.BICYCLE);
+
+
+</script>
+</body>
+</html>

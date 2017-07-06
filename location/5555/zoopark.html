@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>진주 관광지</title>
+	<style>
+	html, body {width:100%;height:900%;margin:0;padding:0;} 
+	.map_wrap {position:relative;overflow:hidden;width:100%;height:900px;}
+	.radius_border{border:1px solid #919191;border-radius:5px;}     
+	.custom_typecontrol {position:absolute;top:10px;right:10px;overflow:hidden;width:130px;height:30px;margin:0;padding:0;z-index:1;font-size:12px;font-family:'Malgun Gothic', '맑은 고딕', sans-serif;}
+	.custom_typecontrol span {display:block;width:65px;height:30px;float:left;text-align:center;line-height:30px;cursor:pointer;}
+	.custom_typecontrol .btn {background:#fff;background:linear-gradient(#fff,  #e6e6e6);}       
+	.custom_typecontrol .btn:hover {background:#f5f5f5;background:linear-gradient(#f5f5f5,#e3e3e3);}
+	.custom_typecontrol .btn:active {background:#e6e6e6;background:linear-gradient(#e6e6e6, #fff);}    
+	.custom_typecontrol .selected_btn {color:#fff;background:#425470;background:linear-gradient(#425470, #5b6d8a);}
+	.custom_typecontrol .selected_btn:hover {color:#fff;}   
+	.custom_zoomcontrol {position:absolute;top:50px;right:10px;width:36px;height:80px;overflow:hidden;z-index:1;background-color:#f5f5f5;} 
+	.custom_zoomcontrol span {display:block;width:36px;height:40px;text-align:center;cursor:pointer;}     
+	.custom_zoomcontrol span img {width:15px;height:15px;padding:12px 0;border:none;}             
+	.custom_zoomcontrol span:first-child{border-bottom:1px solid #bfbfbf;}  
+    .wrap {position: absolute;left: 0;bottom: 40px;width: 288px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
+    .wrap * {padding: 0;margin: 0;}
+    .wrap .info {width: 286px;height: 120px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
+    .wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
+    .info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
+    .info .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
+    .info .close:hover {cursor: pointer;}
+    .info .body {position: relative;overflow: hidden;}
+    .info .desc {position: relative;margin: 13px 0 0 90px;height: 75px;}
+    .desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+    .desc .jibun {font-size: 11px;color: #888;margin-top: -2px;}
+    .info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
+    .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+    .info .link {color: #5085BB;}
+</style> 
+
+    
+</head>
+<body>
+<div class="map_wrap">
+    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div> 
+    <!-- 지도타입 컨트롤 div 입니다 -->
+    <div class="custom_typecontrol radius_border">
+        <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
+        <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">스카이뷰</span>
+    </div>
+    <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+    <div class="custom_zoomcontrol radius_border"> 
+        <span onclick="zoomIn()"><img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"></span>  
+        <span onclick="zoomOut()"><img src="http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소"></span>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=649cb0663217541815c3ad7ca191d4e1"></script>
+<script>
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
+    mapOption = { 
+        center: new daum.maps.LatLng(35.159222421695496, 128.2926581474277), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };
+
+var map = new daum.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+
+ 
+// 마커를 표시할 위치와 내용을 가지고 있는 객체 배열입니다 
+var positions = [
+	{
+        content:
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            수목원 야생동물원' + 
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="http://cfile29.uf.tistory.com/image/195A3A154C31177E9D5584" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 이반성면</div>' +  
+            '                <div><a href="http://blog.daum.net/free3hsj/36" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/수목원야생돌물원,35.159222421695496, 128.2926581474277" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>' , 
+        latlng: new daum.maps.LatLng(35.159222421695496, 128.2926581474277)
+    },
+
+    {
+        content: 
+		    '    <div class="wrap">' + 
+            '    <div class="info">' + 
+            '        <div class="title">' + 
+            '            진양호 동물원' + 
+
+            '        </div>' + 
+            '        <div class="body">' + 
+            '            <div class="img">' +
+            '                <img src="data:image/jpeg;base64,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" width="73" height="70">' +
+            '           </div>' + 
+            '            <div class="desc">' + 
+            '                <div class="ellipsis">경상남도 진주시 판문로 84</div>' + 
+            '                <div class="jibun ellipsis">(문의) 055-749-2514</div>' + 
+            '                <div><a href="http://tour.jinju.go.kr/01tour/SIGHT002.jsp?amode=_viw&cult_sno=403" target="_blank" class="link">홈페이지</a><a href="http://map.daum.net/link/to/진양호동물원,35.176539957942964, 128.0368703473583" target="_blank" class="link">       길찾기</a></div>' + 
+            '            </div>' + 
+            '        </div>' + 
+            '    </div>' +    
+            '</div>'  , 
+        latlng: new daum.maps.LatLng(35.176539957942964, 128.0368703473583)
+    }
+];
+
+for (var i = 0; i < positions.length; i ++) {
+    // 마커를 생성합니다
+    var marker = new daum.maps.Marker({
+        map: map, // 마커를 표시할 지도
+        position: positions[i].latlng // 마커의 위치
+    });
+
+    // 마커에 표시할 인포윈도우를 생성합니다 
+    var infowindow = new daum.maps.InfoWindow({
+        content: positions[i].content // 인포윈도우에 표시할 내용
+    });
+
+    // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+    // 이벤트 리스너로는 클로저를 만들어 등록합니다 
+    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+    daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+    daum.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+	daum.maps.event.addListener(marker, 'click', function() {
+    overlay.setMap(map);
+});
+}
+
+
+// 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+function makeOverListener(map, marker, infowindow) {
+    return function() {
+        infowindow.open(map, marker);
+    };
+}
+
+// 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+function makeOutListener(infowindow) {
+    return function() {
+        infowindow.close();
+    };
+}
+
+function setMapType(maptype) { 
+    var roadmapControl = document.getElementById('btnRoadmap');
+    var skyviewControl = document.getElementById('btnSkyview'); 
+    if (maptype === 'roadmap') {
+        map.setMapTypeId(daum.maps.MapTypeId.ROADMAP);    
+        roadmapControl.className = 'selected_btn';
+        skyviewControl.className = 'btn';
+    } else {
+        map.setMapTypeId(daum.maps.MapTypeId.HYBRID);    
+        skyviewControl.className = 'selected_btn';
+        roadmapControl.className = 'btn';
+    }
+}
+
+// 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+function zoomIn() {
+    map.setLevel(map.getLevel() - 1);
+}
+
+// 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+function zoomOut() {
+    map.setLevel(map.getLevel() + 1);
+}
+
+map.addOverlayMapTypeId(daum.maps.MapTypeId.TRAFFIC);
+map.addOverlayMapTypeId(daum.maps.MapTypeId.BICYCLE);
+
+
+</script>
+</body>
+</html>

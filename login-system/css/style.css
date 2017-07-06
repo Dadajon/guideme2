@@ -1,0 +1,240 @@
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+@font-face {
+    font-family: 'AR BONNIE';
+    src: url(/guideme/fonts/ARBONNIE.ttf);
+}
+
+body {
+    font: normal 2rem AR Bonnie, sans-serif;
+    position: absolute;
+    width: 100%;
+    margin: 0;
+    background-repeat: no-repeat;
+}
+
+a {
+    -webkit-transition: .5s ease;
+    transition: .5s ease;
+    text-decoration: none;
+    color: #953f48;
+}
+
+a:hover {
+    color: #f44336;
+}
+
+.form {
+    position: absolute;
+    top: 100px;
+    left: 38%;
+    width: 400px;
+    margin: 0;
+    padding: 40px;
+    opacity: .95;
+    border-radius: 4px;
+    background-color: #39414a;
+}
+
+.tab-group {
+    margin: 0 0 40px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tab-group:after {
+    display: table;
+    clear: both;
+    content: '';
+}
+
+.tab-group li a {
+    font-size: 30px;
+    display: block;
+    float: left;
+    width: 50%;
+    padding: 15px;
+    cursor: pointer;
+    -webkit-transition: .5s ease;
+    transition: .5s ease;
+    text-align: center;
+    text-decoration: none;
+    color: #a0b3b0;
+    background: rgba(227, 34, 0, .25);
+}
+
+.tab-group li a:hover {
+    color: #fff;
+    background: #84140c;
+}
+
+.tab-group .active a {
+    color: #fff;
+    background: #f44336;
+}
+
+.tab-content>div:last-child {
+    display: none;
+}
+
+h1 {
+    font-weight: 300;
+    margin: 0 0 40px;
+    text-align: center;
+    color: #fff;
+}
+
+h2 {
+    font-weight: 1000;
+    margin: 0;
+    text-align: center;
+    color: #f44c40;
+}
+
+span {
+    font-weight: bold;
+    color: #f44c40;
+}
+
+p {
+    margin: 0 0 50px 0;
+    text-align: center;
+    color: #fff;
+}
+
+div.info {
+    font-size: 24px;
+    display: box;
+    margin-top: -20px;
+    margin-bottom: 15px;
+    padding: 5px;
+    text-align: center;
+    color: pink;
+    border: 1px solid red;
+    background: #66131c;
+}
+
+label {
+    font-size: 24px;
+    position: absolute;
+    left: 13px;
+    -webkit-transition: all .25s ease;
+    transition: all .25s ease;
+    -webkit-transform: translateY(6px);
+    transform: translateY(6px);
+    pointer-events: none;
+    color: rgba(255, 255, 255, .5);
+    -webkit-backface-visibility: hidden;
+}
+
+label .req {
+    margin: 2px;
+    color: #181818;
+}
+
+label.active {
+    font-size: 14px;
+    left: 2px;
+    -webkit-transform: translateY(50px);
+    transform: translateY(50px);
+}
+
+label.active .req {
+    opacity: 0;
+}
+
+label.highlight {
+    color: #fff;
+}
+
+input,
+textarea {
+    font-size: 22px;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 5px 10px;
+    -webkit-transition: border-color .25s ease, box-shadow .25s ease;
+    -webkit-transition: border-color .25s ease, -webkit-box-shadow .25s ease;
+    transition: border-color .25s ease, -webkit-box-shadow .25s ease;
+    transition: border-color .25s ease, box-shadow .25s ease;
+    transition: border-color .25s ease, box-shadow .25s ease, -webkit-box-shadow .25s ease;
+    color: #fff;
+    border: 1px solid #181818;
+    border-radius: 0;
+    background: none;
+    background-image: none;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #f44c40;
+    outline: 0;
+}
+
+textarea {
+    resize: vertical;
+    border: 2px solid #a0b3b0;
+}
+
+.field-wrap {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.top-row:after {
+    display: table;
+    clear: both;
+    content: '';
+}
+
+.top-row>div {
+    float: left;
+    width: 48%;
+    margin-right: 4%;
+}
+
+.top-row>div:last-child {
+    margin: 0;
+}
+
+.button {
+    font-family: 'AR Bonnie', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    padding: 15px 0;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #fff;
+    border: 0;
+    border-radius: 0;
+    outline: none;
+    background: #9c414a;
+    -webkit-appearance: none;
+}
+
+.button:hover,
+.button:focus {
+    background: #f44336;
+}
+
+.button-block {
+    display: block;
+    width: 100%;
+}
+
+.forgot {
+    margin-top: -20px;
+    text-align: right;
+}

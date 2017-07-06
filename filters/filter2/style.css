@@ -1,0 +1,93 @@
+body {
+	margin: 0;
+}
+@font-face{
+  font-family: "Ar Bonnie";
+  src:url(/guideme/fonts/ARBONNIE.ttf)
+  }
+#wrap {
+	position: relative;
+	width:1530px;
+	height: 755px;
+	background-image: url("images/bground.jpeg");
+	background-repeat: no-repeat;
+	z-index: 0;
+}
+#text_wrap{
+	float: left;
+	position: relative;
+	font:40px "Ar Bonnie", sans-serif;
+	height:80px;
+	width:100%;
+	background-color: rgba(255,255,255,0.5);
+	margin-top:20px;
+	padding-top:20px;
+}
+
+#text_wrap span{
+	font-size:50px;
+}
+#next_button{
+	float:right;
+	position: absolute;
+	right:0;
+	top:20px;
+
+}
+#text_wrap #filter_text {
+	font-weight: bold;
+	font-size: 60px;
+	margin-left: 33%;
+}
+#text_wrap a{
+	text-decoration: none;
+	color:black;
+
+}
+.form{
+	position: absolute;
+	width: 100%;
+	height:70%;
+	background-color: rgba(255,255,255,0.5);
+	margin-top:10%;
+	font-family: "Ar Bonnie", sans-serif;
+}
+#partner p {
+	font-size: 40px;
+	width:350px;
+	height: 50px;
+	padding: 10px 0 5px 20px;
+	background-color: #979d9d;
+}
+#place p {
+	font-size: 40px;
+	width:100px;
+	height: 50px;
+	padding: 10px 0 5px 270px;
+	background-color: #979d9d;
+}
+input[type=checkbox]{
+    display: none;
+}
+
+
+ input[type=checkbox] + label{
+    display: inline-block;
+    width: 100px;
+    height: 60px;
+    margin-left: 150px;
+    padding-left: 40px;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    line-height: 32px;
+    cursor: pointer;
+}
+
+input[type=checkbox]:checked + label{
+ background-image: url("images/checked.png")
+}
+
+label{
+ background-image:url(images/checkbox.png);
+ font-size:30px;
+}
